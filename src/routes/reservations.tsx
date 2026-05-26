@@ -1,10 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Flame, PartyPopper, ChevronRight } from "lucide-react";
 import { AppShell, Card } from "@/components/AppShell";
+import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
 
 export const Route = createFileRoute("/reservations")({
   head: () => ({ meta: [{ title: "Reservas — SunnyvaleConnect" }] }),
-  component: ReservationsPage,
+  component: () => (
+    <ProtectedRoute>
+      <ReservationsPage />
+    </ProtectedRoute>
+  ),
 });
 
 const spaces = [

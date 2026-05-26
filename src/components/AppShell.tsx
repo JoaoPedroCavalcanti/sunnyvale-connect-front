@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Home, CalendarCheck, Users, Wallet, User } from "lucide-react";
+import { ArrowLeft, Home, CalendarCheck, Users, Wallet, User, Loader2, AlertCircle } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface AppShellProps {
@@ -97,6 +97,35 @@ export function EmptyState({ title, hint }: { title: string; hint?: string }) {
       </div>
       <p className="font-medium">{title}</p>
       {hint && <p className="text-sm text-muted-foreground mt-1">{hint}</p>}
+    </div>
+  );
+}
+
+export function LoadingState({ label }: { label?: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 gap-2">
+      <Loader2 className="size-5 animate-spin text-muted-foreground" />
+      {label && <p className="text-sm text-muted-foreground">{label}</p>}
+    </div>
+  );
+}
+
+export function ErrorState({ message, onRetry }: { message?: string; onRetry?: () => void }) {
+  return (
+    <div className="text-center py-12 px-6">
+      <div className="mx-auto size-14 rounded-full bg-destructive/10 text-destructive flex items-center justify-center mb-3">
+        <AlertCircle className="size-6" />
+      </div>
+      <p className="font-medium">Algo deu errado</p>
+      <p className="text-sm text-muted-foreground mt-1">{message ?? "Tenta novamente em alguns segundos."}</p>
+      {onRetry && (
+        <button
+          onClick={onRetry}
+          className="mt-4 inline-flex items-center justify-center px-4 h-10 rounded-xl bg-primary text-primary-foreground text-sm font-semibold"
+        >
+          Tentar novamente
+        </button>
+      )}
     </div>
   );
 }

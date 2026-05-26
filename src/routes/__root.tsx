@@ -11,6 +11,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { registerServiceWorker } from "@/lib/register-sw";
+import { AuthProvider } from "@/lib/auth/AuthProvider";
 
 function NotFoundComponent() {
   return (
@@ -125,7 +126,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <AuthProvider>
+        <Outlet />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

@@ -1,0 +1,1826 @@
+openapi: 3.0.3
+info:
+  title: SunnyvaleConnect API
+  version: 1.0.0
+  description: 'API of a condominium management system: users, reservations, visitor
+    access, service requests, payments, deliveries and news.'
+paths:
+  /api/token/:
+    post:
+      operationId: api_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/token/verify/:
+    post:
+      operationId: api_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerifyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerifyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: No response body
+  /bbq/:
+    get:
+      operationId: bbq_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - bbq
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBBQReservationList'
+          description: ''
+    post:
+      operationId: bbq_create
+      tags:
+      - bbq
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BBQReservationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BBQReservationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BBQReservationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BBQReservation'
+          description: ''
+  /bbq/{id}/:
+    get:
+      operationId: bbq_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this bbq reservation model.
+        required: true
+      tags:
+      - bbq
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BBQReservation'
+          description: ''
+    patch:
+      operationId: bbq_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this bbq reservation model.
+        required: true
+      tags:
+      - bbq
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBBQReservationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBBQReservationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBBQReservationRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BBQReservation'
+          description: ''
+    delete:
+      operationId: bbq_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this bbq reservation model.
+        required: true
+      tags:
+      - bbq
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /condo_payments/:
+    get:
+      operationId: condo_payments_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - condo_payments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCondoPaymentList'
+          description: ''
+    post:
+      operationId: condo_payments_create
+      tags:
+      - condo_payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CondoPaymentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CondoPaymentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CondoPaymentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CondoPayment'
+          description: ''
+  /condo_payments/{id}/:
+    get:
+      operationId: condo_payments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - condo_payments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CondoPayment'
+          description: ''
+    put:
+      operationId: condo_payments_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - condo_payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CondoPaymentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CondoPaymentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CondoPaymentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CondoPayment'
+          description: ''
+    patch:
+      operationId: condo_payments_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - condo_payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCondoPaymentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCondoPaymentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCondoPaymentRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CondoPayment'
+          description: ''
+    delete:
+      operationId: condo_payments_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - condo_payments
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /condo_payments/set_paid_status/:
+    patch:
+      operationId: condo_payments_set_paid_status_partial_update
+      tags:
+      - condo_payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCondoPaymentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCondoPaymentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCondoPaymentRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CondoPayment'
+          description: ''
+  /delivery_notification/:
+    post:
+      operationId: delivery_notification_create
+      tags:
+      - delivery_notification
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /delivery_notification/{id}/:
+    get:
+      operationId: delivery_notification_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - delivery_notification
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /delivery_notification/list/:
+    get:
+      operationId: delivery_notification_list_retrieve
+      tags:
+      - delivery_notification
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /hall/:
+    get:
+      operationId: hall_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - hall
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHallReservationList'
+          description: ''
+    post:
+      operationId: hall_create
+      tags:
+      - hall
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HallReservationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HallReservationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HallReservationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HallReservation'
+          description: ''
+  /hall/{id}/:
+    get:
+      operationId: hall_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this hall reservation model.
+        required: true
+      tags:
+      - hall
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HallReservation'
+          description: ''
+    put:
+      operationId: hall_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this hall reservation model.
+        required: true
+      tags:
+      - hall
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HallReservationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HallReservationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HallReservationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HallReservation'
+          description: ''
+    patch:
+      operationId: hall_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this hall reservation model.
+        required: true
+      tags:
+      - hall
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedHallReservationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedHallReservationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedHallReservationRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HallReservation'
+          description: ''
+    delete:
+      operationId: hall_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this hall reservation model.
+        required: true
+      tags:
+      - hall
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /service_requests/:
+    get:
+      operationId: service_requests_retrieve
+      tags:
+      - service_requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: service_requests_create
+      tags:
+      - service_requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /service_requests/{id}/:
+    get:
+      operationId: service_requests_retrieve_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - service_requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: service_requests_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - service_requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: service_requests_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - service_requests
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /service_requests/accept_or_decline/{id}/{accept_or_decline}/:
+    patch:
+      operationId: service_requests_accept_or_decline_partial_update
+      parameters:
+      - in: path
+        name: accept_or_decline
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - service_requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /sunny_vale_news/:
+    get:
+      operationId: sunny_vale_news_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - sunny_vale_news
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSunnyValeNewsList'
+          description: ''
+    post:
+      operationId: sunny_vale_news_create
+      tags:
+      - sunny_vale_news
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SunnyValeNewsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SunnyValeNewsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SunnyValeNewsRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SunnyValeNews'
+          description: ''
+  /sunny_vale_news/{id}/:
+    get:
+      operationId: sunny_vale_news_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sunny vale news model.
+        required: true
+      tags:
+      - sunny_vale_news
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SunnyValeNews'
+          description: ''
+    put:
+      operationId: sunny_vale_news_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sunny vale news model.
+        required: true
+      tags:
+      - sunny_vale_news
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SunnyValeNewsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SunnyValeNewsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SunnyValeNewsRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SunnyValeNews'
+          description: ''
+    patch:
+      operationId: sunny_vale_news_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sunny vale news model.
+        required: true
+      tags:
+      - sunny_vale_news
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSunnyValeNewsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSunnyValeNewsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSunnyValeNewsRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SunnyValeNews'
+          description: ''
+    delete:
+      operationId: sunny_vale_news_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sunny vale news model.
+        required: true
+      tags:
+      - sunny_vale_news
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /user/:
+    get:
+      operationId: user_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: user_create
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /user/{id}/:
+    get:
+      operationId: user_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: user_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: user_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /user/me/:
+    get:
+      operationId: user_me_retrieve
+      description: |-
+        Return (or update) the currently authenticated user without
+        exposing their primary key in the URL.
+      tags:
+      - user
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: user_me_partial_update
+      description: |-
+        Return (or update) the currently authenticated user without
+        exposing their primary key in the URL.
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /visitor_access/:
+    get:
+      operationId: visitor_access_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - visitor_access
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedVisitorAccessList'
+          description: ''
+    post:
+      operationId: visitor_access_create
+      tags:
+      - visitor_access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitorAccessRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VisitorAccessRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VisitorAccessRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorAccess'
+          description: ''
+  /visitor_access/{id}/:
+    get:
+      operationId: visitor_access_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - visitor_access
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorAccess'
+          description: ''
+    put:
+      operationId: visitor_access_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - visitor_access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitorAccessRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VisitorAccessRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VisitorAccessRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorAccess'
+          description: ''
+    patch:
+      operationId: visitor_access_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - visitor_access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedVisitorAccessRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedVisitorAccessRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedVisitorAccessRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorAccess'
+          description: ''
+    delete:
+      operationId: visitor_access_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - visitor_access
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /visitor_access/checkin/{visitor_access_link_checkin}/:
+    get:
+      operationId: visitor_access_checkin_retrieve
+      parameters:
+      - in: path
+        name: visitor_access_link_checkin
+        schema:
+          type: string
+        required: true
+      tags:
+      - visitor_access
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorAccess'
+          description: ''
+  /visitor_access/checkout/{visitor_access_link_checkout}/:
+    get:
+      operationId: visitor_access_checkout_retrieve
+      parameters:
+      - in: path
+        name: visitor_access_link_checkout
+        schema:
+          type: string
+        required: true
+      tags:
+      - visitor_access
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorAccess'
+          description: ''
+components:
+  schemas:
+    BBQReservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        reservation_user:
+          type: integer
+          nullable: true
+        reservation_date:
+          type: string
+          format: date
+        guest_count:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+      required:
+      - id
+      - reservation_date
+    BBQReservationRequest:
+      type: object
+      properties:
+        reservation_user:
+          type: integer
+          nullable: true
+        reservation_date:
+          type: string
+          format: date
+        guest_count:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+      required:
+      - reservation_date
+    CondoPayment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 150
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        description:
+          type: string
+          nullable: true
+          maxLength: 350
+        payment_link:
+          type: string
+          maxLength: 150
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        payment_date:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        payer_user:
+          type: integer
+      required:
+      - created_at
+      - id
+      - payer_user
+      - payment_link
+      - title
+      - updated_at
+    CondoPaymentRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 150
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        description:
+          type: string
+          nullable: true
+          maxLength: 350
+        payment_link:
+          type: string
+          minLength: 1
+          maxLength: 150
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        payment_date:
+          type: string
+          format: date-time
+          nullable: true
+        payer_user:
+          type: integer
+      required:
+      - payer_user
+      - payment_link
+      - title
+    HallReservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        reservation_user:
+          type: integer
+          nullable: true
+        reservation_date:
+          type: string
+          format: date
+        guest_count:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+      required:
+      - id
+      - reservation_date
+    HallReservationRequest:
+      type: object
+      properties:
+        reservation_user:
+          type: integer
+          nullable: true
+        reservation_date:
+          type: string
+          format: date
+        guest_count:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+      required:
+      - reservation_date
+    PaginatedBBQReservationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BBQReservation'
+    PaginatedCondoPaymentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CondoPayment'
+    PaginatedHallReservationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/HallReservation'
+    PaginatedSunnyValeNewsList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SunnyValeNews'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PaginatedVisitorAccessList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitorAccess'
+    PatchedBBQReservationRequest:
+      type: object
+      properties:
+        reservation_user:
+          type: integer
+          nullable: true
+        reservation_date:
+          type: string
+          format: date
+        guest_count:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+    PatchedCondoPaymentRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 150
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        description:
+          type: string
+          nullable: true
+          maxLength: 350
+        payment_link:
+          type: string
+          minLength: 1
+          maxLength: 150
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        payment_date:
+          type: string
+          format: date-time
+          nullable: true
+        payer_user:
+          type: integer
+    PatchedHallReservationRequest:
+      type: object
+      properties:
+        reservation_user:
+          type: integer
+          nullable: true
+        reservation_date:
+          type: string
+          format: date
+        guest_count:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+    PatchedSunnyValeNewsRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+        author:
+          type: string
+          minLength: 1
+          maxLength: 50
+        priority_level:
+          $ref: '#/components/schemas/PriorityLevelEnum'
+    PatchedUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+    PatchedVisitorAccessRequest:
+      type: object
+      properties:
+        visitor_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        scheduled_date:
+          type: string
+          format: date-time
+        checkout_date_time:
+          type: string
+          format: date-time
+          nullable: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 150
+        host_user:
+          type: integer
+          nullable: true
+    PriorityLevelEnum:
+      enum:
+      - low
+      - medium
+      - high
+      type: string
+      description: |-
+        * `low` - Low
+        * `medium` - Medium
+        * `high` - High
+    StatusEnum:
+      enum:
+      - pending
+      - paid
+      - overdue
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `paid` - Paid
+        * `overdue` - Overdue
+    SunnyValeNews:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        author:
+          type: string
+          maxLength: 50
+        priority_level:
+          $ref: '#/components/schemas/PriorityLevelEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - author
+      - created_at
+      - description
+      - id
+      - title
+      - updated_at
+    SunnyValeNewsRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+        author:
+          type: string
+          minLength: 1
+          maxLength: 50
+        priority_level:
+          $ref: '#/components/schemas/PriorityLevelEnum'
+      required:
+      - author
+      - description
+      - title
+    TokenObtainPair:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+      required:
+      - access
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - refresh
+    TokenVerifyRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - token
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+      required:
+      - email
+      - first_name
+      - id
+      - last_name
+      - username
+    UserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+      - username
+    VisitorAccess:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        visitor_name:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        scheduled_date:
+          type: string
+          format: date-time
+        checkin_date_time:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        checkout_date_time:
+          type: string
+          format: date-time
+          nullable: true
+        checkin_code:
+          type: string
+          readOnly: true
+        checkout_code:
+          type: string
+          readOnly: true
+        status:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 150
+        link_checkin:
+          type: string
+          readOnly: true
+          nullable: true
+        link_checkout:
+          type: string
+          readOnly: true
+          nullable: true
+        host_user:
+          type: integer
+          nullable: true
+      required:
+      - checkin_code
+      - checkin_date_time
+      - checkout_code
+      - created_at
+      - id
+      - link_checkin
+      - link_checkout
+      - scheduled_date
+      - status
+      - updated_at
+      - visitor_name
+    VisitorAccessRequest:
+      type: object
+      properties:
+        visitor_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        scheduled_date:
+          type: string
+          format: date-time
+        checkout_date_time:
+          type: string
+          format: date-time
+          nullable: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 150
+        host_user:
+          type: integer
+          nullable: true
+      required:
+      - scheduled_date
+      - visitor_name
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

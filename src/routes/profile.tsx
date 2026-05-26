@@ -1,30 +1,44 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Pencil, Mail, AtSign, Home } from "lucide-react";
-import { AppShell, Card } from "@/components/AppShell";
-import { currentUser } from "@/lib/mocks";
+import { LogOut, Pencil, Mail, AtSign, User as UserIcon } from "lucide-react";
+import { AppShell, Card, LoadingState } from "@/components/AppShell";
+import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
+import { useAuth } from "@/lib/auth/AuthProvider";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "Perfil — SunnyvaleConnect" }] }),
-  component: ProfilePage,
+  component: () => (
+    <ProtectedRoute>
+      <ProfilePage />
+    </ProtectedRoute>
+  ),
 });
 
 function ProfilePage() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  if (!user) return <AppShell showTabs><LoadingState /></AppShell>;
+
+  function handleLogout() {
+    logout();
+    navigate({ to: "/login" });
+  }
+
   return (
     <AppShell showTabs>
       <div className="bg-gradient-to-b from-primary to-primary/80 text-primary-foreground pt-12 pb-10 px-5 rounded-b-3xl flex flex-col items-center">
         <div className="size-20 rounded-full bg-primary-foreground/20 backdrop-blur flex items-center justify-center text-3xl font-bold">
-          {currentUser.first_name.charAt(0)}{currentUser.last_name.charAt(0)}
+          {user.first_name.charAt(0)}{user.last_name.charAt(0)}
         </div>
-        <h1 className="text-xl font-bold mt-3">{currentUser.first_name} {currentUser.last_name}</h1>
-        <p className="text-sm opacity-80">@{currentUser.username}</p>
+        <h1 className="text-xl font-bold mt-3">{user.first_name} {user.last_name}</h1>
+        <p className="text-sm opacity-80">@{user.username}</p>
       </div>
 
       <div className="px-5 -mt-4 space-y-3">
         <Card className="space-y-3">
-          <Row icon={<Mail className="size-4" />} label="E-mail" value={currentUser.email} />
-          <Row icon={<AtSign className="size-4" />} label="Usuário" value={currentUser.username} />
-          <Row icon={<Home className="size-4" />} label="Unidade" value={currentUser.unit ?? "-"} />
+          <Row icon={<Mail className="size-4" />} label="E-mail" value={user.email} />
+          <Row icon={<AtSign className="size-4" />} label="Usuário" value={user.username} />
+          <Row icon={<UserIcon className="size-4" />} label="ID" value={String(user.id)} />
         </Card>
 
         <Link to="/profile/edit"
@@ -32,7 +46,7 @@ function ProfilePage() {
           <Pencil className="size-4" /> Editar perfil
         </Link>
 
-        <button onClick={() => navigate({ to: "/login" })}
+        <button onClick={handleLogout}
           className="w-full h-12 rounded-xl bg-destructive/10 text-destructive font-medium flex items-center justify-center gap-2">
           <LogOut className="size-4" /> Sair
         </button>

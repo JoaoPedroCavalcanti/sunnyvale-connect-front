@@ -1,20 +1,43 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
+import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
+import { createVisitor, visitorsKeys } from "@/lib/api/queries";
 
 export const Route = createFileRoute("/visitors/new")({
-  component: NewVisitor,
+  component: () => (
+    <ProtectedRoute>
+      <NewVisitor />
+    </ProtectedRoute>
+  ),
 });
 
 function NewVisitor() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: "", email: "", date: "", description: "" });
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      createVisitor({
+        visitor_name: form.name,
+        scheduled_date: new Date(form.date).toISOString(),
+        email: form.email || undefined,
+        description: form.description || undefined,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: visitorsKeys.all });
+      navigate({ to: "/visitors" });
+    },
+    onError: () => setError("Não foi possível cadastrar. Confira os dados e tente novamente."),
+  });
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setTimeout(() => navigate({ to: "/visitors" }), 600);
+    setError(null);
+    mutation.mutate();
   }
 
   return (
@@ -36,8 +59,9 @@ function NewVisitor() {
           <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
             rows={3} className="input !h-auto py-3 resize-none" placeholder="Ex: jantar de família" />
         </Field>
-        <button disabled={loading} className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold disabled:opacity-70">
-          {loading ? "Cadastrando..." : "Cadastrar visitante"}
+        {error && <p className="text-sm text-destructive">{error}</p>}
+        <button disabled={mutation.isPending} className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold disabled:opacity-70">
+          {mutation.isPending ? "Cadastrando..." : "Cadastrar visitante"}
         </button>
       </form>
       <style>{`.input{width:100%;height:2.75rem;padding:0 0.875rem;border-radius:0.75rem;border:1px solid var(--input);background:var(--card);outline:none}.input:focus{box-shadow:0 0 0 2px var(--ring)}`}</style>

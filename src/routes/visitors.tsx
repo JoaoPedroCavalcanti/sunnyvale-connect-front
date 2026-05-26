@@ -1,14 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { AppShell, Card, StatusBadge, EmptyState } from "@/components/AppShell";
-import { visitors, formatDate } from "@/lib/mocks";
+import { AppShell, Card, StatusBadge, EmptyState, LoadingState, ErrorState } from "@/components/AppShell";
+import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
+import { visitorsList } from "@/lib/api/queries";
+import { formatDate } from "@/lib/format";
 
 export const Route = createFileRoute("/visitors")({
   head: () => ({ meta: [{ title: "Visitantes — SunnyvaleConnect" }] }),
-  component: VisitorsPage,
+  component: () => (
+    <ProtectedRoute>
+      <VisitorsPage />
+    </ProtectedRoute>
+  ),
 });
 
 function VisitorsPage() {
+  const { data, isPending, isError, refetch } = useQuery(visitorsList());
+
   return (
     <AppShell showTabs>
       <div className="px-5 pt-8 pb-4 flex items-center justify-between">
@@ -21,10 +30,14 @@ function VisitorsPage() {
         </Link>
       </div>
       <div className="px-5 space-y-3">
-        {visitors.length === 0 ? (
+        {isPending ? (
+          <LoadingState />
+        ) : isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : data.length === 0 ? (
           <EmptyState title="Nenhum visitante" hint="Cadastre seu primeiro visitante." />
         ) : (
-          visitors.map((v) => (
+          data.map((v) => (
             <Link key={v.id} to="/visitors/$id" params={{ id: String(v.id) }}>
               <Card className="flex items-center gap-3">
                 <div className="size-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-semibold">
@@ -32,7 +45,7 @@ function VisitorsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm">{v.visitor_name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{v.email}</p>
+                  <p className="text-xs text-muted-foreground truncate">{v.email ?? "—"}</p>
                   <p className="text-[11px] text-muted-foreground mt-0.5">{formatDate(v.scheduled_date, true)}</p>
                 </div>
                 <StatusBadge status={v.status} />

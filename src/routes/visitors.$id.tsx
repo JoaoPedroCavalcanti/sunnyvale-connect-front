@@ -1,18 +1,35 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Mail, Calendar, Hash, Trash2 } from "lucide-react";
-import { AppShell, Card, StatusBadge } from "@/components/AppShell";
-import { visitors, formatDate } from "@/lib/mocks";
+import { AppShell, Card, StatusBadge, LoadingState, ErrorState } from "@/components/AppShell";
+import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
+import { visitorOne, visitorsKeys, deleteVisitor } from "@/lib/api/queries";
+import { formatDate } from "@/lib/format";
 
 export const Route = createFileRoute("/visitors/$id")({
-  component: VisitorDetail,
+  component: () => (
+    <ProtectedRoute>
+      <VisitorDetail />
+    </ProtectedRoute>
+  ),
 });
 
 function VisitorDetail() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
-  const v = visitors.find((x) => x.id === Number(id));
+  const queryClient = useQueryClient();
+  const { data: v, isPending, isError, refetch } = useQuery(visitorOne(id));
 
-  if (!v) return <AppShell title="Visitante" showBack showTabs={false}><div className="p-5"><Card>Não encontrado.</Card></div></AppShell>;
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteVisitor(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: visitorsKeys.all });
+      navigate({ to: "/visitors" });
+    },
+  });
+
+  if (isPending) return <AppShell title="Visitante" showBack showTabs={false}><LoadingState /></AppShell>;
+  if (isError) return <AppShell title="Visitante" showBack showTabs={false}><ErrorState onRetry={() => refetch()} /></AppShell>;
 
   return (
     <AppShell title="Visitante" showBack showTabs={false}>
@@ -27,28 +44,37 @@ function VisitorDetail() {
               <StatusBadge status={v.status} />
             </div>
           </div>
-          <p className="text-sm text-muted-foreground mt-3">{v.description}</p>
+          {v.description && <p className="text-sm text-muted-foreground mt-3">{v.description}</p>}
         </Card>
 
         <Card className="space-y-3">
-          <Row icon={<Mail className="size-4" />} label="E-mail" value={v.email} />
+          <Row icon={<Mail className="size-4" />} label="E-mail" value={v.email ?? "—"} />
           <Row icon={<Calendar className="size-4" />} label="Agendado para" value={formatDate(v.scheduled_date, true)} />
           <Row icon={<Calendar className="size-4" />} label="Check-in" value={v.checkin_date_time ? formatDate(v.checkin_date_time, true) : "—"} />
           <Row icon={<Calendar className="size-4" />} label="Checkout" value={v.checkout_date_time ? formatDate(v.checkout_date_time, true) : "—"} />
         </Card>
 
         <Card className="space-y-3">
-          <Row icon={<Hash className="size-4" />} label="Código de check-in" value={v.checkin_code} mono />
-          <Row icon={<Hash className="size-4" />} label="Código de checkout" value={v.checkout_code} mono />
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            <a href={v.link_checkin} className="h-10 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center">Link check-in</a>
-            <a href={v.link_checkout} className="h-10 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium flex items-center justify-center">Link checkout</a>
-          </div>
+          <Row icon={<Hash className="size-4" />} label="Código de check-in" value={v.checkin_code || "—"} mono />
+          <Row icon={<Hash className="size-4" />} label="Código de checkout" value={v.checkout_code || "—"} mono />
+          {(v.link_checkin || v.link_checkout) && (
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              {v.link_checkin && (
+                <a href={v.link_checkin} className="h-10 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center">Link check-in</a>
+              )}
+              {v.link_checkout && (
+                <a href={v.link_checkout} className="h-10 rounded-xl bg-secondary text-secondary-foreground text-sm font-medium flex items-center justify-center">Link checkout</a>
+              )}
+            </div>
+          )}
         </Card>
 
-        <button onClick={() => navigate({ to: "/visitors" })}
-          className="w-full h-11 rounded-xl bg-destructive/10 text-destructive font-medium flex items-center justify-center gap-2">
-          <Trash2 className="size-4" /> Excluir visitante
+        <button
+          onClick={() => deleteMutation.mutate()}
+          disabled={deleteMutation.isPending}
+          className="w-full h-11 rounded-xl bg-destructive/10 text-destructive font-medium flex items-center justify-center gap-2 disabled:opacity-70"
+        >
+          <Trash2 className="size-4" /> {deleteMutation.isPending ? "Excluindo..." : "Excluir visitante"}
         </button>
       </div>
     </AppShell>

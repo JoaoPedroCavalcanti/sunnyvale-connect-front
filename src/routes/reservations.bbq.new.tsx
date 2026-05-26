@@ -1,25 +1,47 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
+import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
+import { createBbqReservation, createHallReservation, bbqKeys, hallKeys } from "@/lib/api/queries";
 
 export const Route = createFileRoute("/reservations/bbq/new")({
-  component: NewBbq,
+  component: () => (
+    <ProtectedRoute>
+      <ReservationForm space="Churrasqueira" backTo="/reservations/bbq" kind="bbq" />
+    </ProtectedRoute>
+  ),
 });
 
-function NewBbq() {
-  return <ReservationForm space="Churrasqueira" backTo="/reservations/bbq" />;
-}
-
-export function ReservationForm({ space, backTo }: { space: string; backTo: string }) {
+export function ReservationForm({
+  space,
+  backTo,
+  kind,
+}: {
+  space: string;
+  backTo: "/reservations/bbq" | "/reservations/hall";
+  kind: "bbq" | "hall";
+}) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState(10);
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: (input: { reservation_date: string; guest_count: number }) =>
+      kind === "bbq" ? createBbqReservation(input) : createHallReservation(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: kind === "bbq" ? bbqKeys.all : hallKeys.all });
+      navigate({ to: backTo });
+    },
+    onError: () => setError("Não foi possível confirmar. Verifique a data e tente de novo."),
+  });
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setTimeout(() => navigate({ to: backTo }), 600);
+    setError(null);
+    mutation.mutate({ reservation_date: date, guest_count: guests });
   }
 
   return (
@@ -33,9 +55,10 @@ export function ReservationForm({ space, backTo }: { space: string; backTo: stri
           <input type="number" min={1} required value={guests} onChange={(e) => setGuests(Number(e.target.value))}
             className="w-full h-11 px-3.5 rounded-xl border border-input bg-card focus:outline-none focus:ring-2 focus:ring-ring" />
         </Field>
-        <button disabled={loading}
+        {error && <p className="text-sm text-destructive">{error}</p>}
+        <button disabled={mutation.isPending}
           className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold disabled:opacity-70">
-          {loading ? "Confirmando..." : "Confirmar reserva"}
+          {mutation.isPending ? "Confirmando..." : "Confirmar reserva"}
         </button>
       </form>
     </AppShell>

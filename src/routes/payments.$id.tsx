@@ -1,35 +1,58 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
-import { AppShell, Card, StatusBadge } from "@/components/AppShell";
-import { payments, formatDate, formatCurrency } from "@/lib/mocks";
+import { AppShell, Card, StatusBadge, LoadingState, ErrorState } from "@/components/AppShell";
+import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
+import { paymentOne, type CondoPayment } from "@/lib/api/queries";
+import { formatDate, formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/payments/$id")({
-  component: PaymentDetail,
+  component: () => (
+    <ProtectedRoute>
+      <PaymentDetail />
+    </ProtectedRoute>
+  ),
 });
+
+const statusLabel: Record<string, string> = {
+  pending: "pendente",
+  paid: "pago",
+  overdue: "atrasado",
+};
 
 function PaymentDetail() {
   const { id } = Route.useParams();
-  const p = payments.find((x) => x.id === Number(id));
-  if (!p) return <AppShell title="Pagamento" showBack showTabs={false}><div className="p-5"><Card>Não encontrado.</Card></div></AppShell>;
+  const { data: p, isPending, isError, refetch } = useQuery(paymentOne(id));
+
+  if (isPending) return <AppShell title="Pagamento" showBack showTabs={false}><LoadingState /></AppShell>;
+  if (isError) return <AppShell title="Pagamento" showBack showTabs={false}><ErrorState onRetry={() => refetch()} /></AppShell>;
+
+  const pp = p as CondoPayment & { amount?: number | string; due_date?: string | null };
 
   return (
     <AppShell title="Pagamento" showBack showTabs={false}>
       <div className="p-5 space-y-3">
         <Card>
-          <StatusBadge status={p.status} />
+          <StatusBadge status={statusLabel[p.status] ?? p.status} />
           <h2 className="font-semibold text-lg mt-2">{p.title}</h2>
-          <p className="text-3xl font-bold mt-3">{formatCurrency(p.amount)}</p>
+          <p className="text-3xl font-bold mt-3">{formatCurrency(pp.amount ?? 0)}</p>
           <p className="text-xs text-muted-foreground mt-1">
-            {p.status === "pago" ? `Pago em ${formatDate(p.payment_date)}` : `Vencimento ${formatDate(p.due_date)}`}
+            {p.status === "paid"
+              ? `Pago em ${formatDate(p.payment_date)}`
+              : `Vencimento ${formatDate(pp.due_date ?? p.payment_date)}`}
           </p>
         </Card>
-        <Card>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Descrição</p>
-          <p className="text-sm">{p.description}</p>
-        </Card>
-        {p.status !== "pago" && (
-          <a href={p.payment_link}
-            className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold flex items-center justify-center gap-2">
+        {p.description && (
+          <Card>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Descrição</p>
+            <p className="text-sm">{p.description}</p>
+          </Card>
+        )}
+        {p.status !== "paid" && p.payment_link && (
+          <a
+            href={p.payment_link}
+            className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold flex items-center justify-center gap-2"
+          >
             Abrir link de pagamento <ExternalLink className="size-4" />
           </a>
         )}

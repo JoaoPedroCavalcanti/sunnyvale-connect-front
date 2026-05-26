@@ -2,16 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
 import { AppShell, Card, StatusBadge, LoadingState, ErrorState } from "@/components/AppShell";
-import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
 import { paymentOne, type CondoPayment } from "@/lib/api/queries";
 import { formatDate, formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/payments/$id")({
-  component: () => (
-    <ProtectedRoute>
-      <PaymentDetail />
-    </ProtectedRoute>
-  ),
+  component: PaymentDetail,
 });
 
 const statusLabel: Record<string, string> = {

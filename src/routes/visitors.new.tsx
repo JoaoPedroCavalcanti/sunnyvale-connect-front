@@ -2,15 +2,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
-import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
 import { createVisitor, visitorsKeys } from "@/lib/api/queries";
 
 export const Route = createFileRoute("/visitors/new")({
-  component: () => (
-    <ProtectedRoute>
-      <NewVisitor />
-    </ProtectedRoute>
-  ),
+  component: NewVisitor,
 });
 
 function NewVisitor() {

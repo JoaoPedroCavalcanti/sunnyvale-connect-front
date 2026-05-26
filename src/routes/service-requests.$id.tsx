@@ -2,16 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import { AppShell, Card, StatusBadge, LoadingState, ErrorState } from "@/components/AppShell";
-import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
 import { requestOne, requestsKeys, deleteServiceRequest } from "@/lib/api/queries";
 import { formatDate } from "@/lib/format";
 
 export const Route = createFileRoute("/service-requests/$id")({
-  component: () => (
-    <ProtectedRoute>
-      <RequestDetail />
-    </ProtectedRoute>
-  ),
+  component: RequestDetail,
 });
 
 const statusLabel: Record<string, string> = {

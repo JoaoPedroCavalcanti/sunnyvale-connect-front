@@ -2,16 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Mail, Calendar, Hash, Trash2 } from "lucide-react";
 import { AppShell, Card, StatusBadge, LoadingState, ErrorState } from "@/components/AppShell";
-import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
 import { visitorOne, visitorsKeys, deleteVisitor } from "@/lib/api/queries";
 import { formatDate } from "@/lib/format";
 
 export const Route = createFileRoute("/visitors/$id")({
-  component: () => (
-    <ProtectedRoute>
-      <VisitorDetail />
-    </ProtectedRoute>
-  ),
+  component: VisitorDetail,
 });
 
 function VisitorDetail() {

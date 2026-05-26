@@ -1,16 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, Card, PriorityBadge, LoadingState, ErrorState } from "@/components/AppShell";
-import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
 import { newsOne } from "@/lib/api/queries";
 import { formatDate } from "@/lib/format";
 
 export const Route = createFileRoute("/news/$id")({
-  component: () => (
-    <ProtectedRoute>
-      <NewsDetail />
-    </ProtectedRoute>
-  ),
+  component: NewsDetail,
 });
 
 function NewsDetail() {

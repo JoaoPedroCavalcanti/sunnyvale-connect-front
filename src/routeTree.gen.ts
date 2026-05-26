@@ -19,6 +19,12 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as DeliveriesRouteImport } from './routes/deliveries'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VisitorsIndexRouteImport } from './routes/visitors.index'
+import { Route as ServiceRequestsIndexRouteImport } from './routes/service-requests.index'
+import { Route as ReservationsIndexRouteImport } from './routes/reservations.index'
+import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as PaymentsIndexRouteImport } from './routes/payments.index'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as VisitorsNewRouteImport } from './routes/visitors.new'
 import { Route as VisitorsIdRouteImport } from './routes/visitors.$id'
 import { Route as ServiceRequestsNewRouteImport } from './routes/service-requests.new'
@@ -28,6 +34,8 @@ import { Route as ReservationsBbqRouteImport } from './routes/reservations.bbq'
 import { Route as ProfileEditRouteImport } from './routes/profile.edit'
 import { Route as PaymentsIdRouteImport } from './routes/payments.$id'
 import { Route as NewsIdRouteImport } from './routes/news.$id'
+import { Route as ReservationsHallIndexRouteImport } from './routes/reservations.hall.index'
+import { Route as ReservationsBbqIndexRouteImport } from './routes/reservations.bbq.index'
 import { Route as ReservationsHallNewRouteImport } from './routes/reservations.hall.new'
 import { Route as ReservationsBbqNewRouteImport } from './routes/reservations.bbq.new'
 
@@ -81,6 +89,36 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VisitorsIndexRoute = VisitorsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VisitorsRoute,
+} as any)
+const ServiceRequestsIndexRoute = ServiceRequestsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ServiceRequestsRoute,
+} as any)
+const ReservationsIndexRoute = ReservationsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReservationsRoute,
+} as any)
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const PaymentsIndexRoute = PaymentsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PaymentsRoute,
+} as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NewsRoute,
+} as any)
 const VisitorsNewRoute = VisitorsNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -126,6 +164,16 @@ const NewsIdRoute = NewsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => NewsRoute,
 } as any)
+const ReservationsHallIndexRoute = ReservationsHallIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReservationsHallRoute,
+} as any)
+const ReservationsBbqIndexRoute = ReservationsBbqIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReservationsBbqRoute,
+} as any)
 const ReservationsHallNewRoute = ReservationsHallNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -157,31 +205,39 @@ export interface FileRoutesByFullPath {
   '/service-requests/new': typeof ServiceRequestsNewRoute
   '/visitors/$id': typeof VisitorsIdRoute
   '/visitors/new': typeof VisitorsNewRoute
+  '/news/': typeof NewsIndexRoute
+  '/payments/': typeof PaymentsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/reservations/': typeof ReservationsIndexRoute
+  '/service-requests/': typeof ServiceRequestsIndexRoute
+  '/visitors/': typeof VisitorsIndexRoute
   '/reservations/bbq/new': typeof ReservationsBbqNewRoute
   '/reservations/hall/new': typeof ReservationsHallNewRoute
+  '/reservations/bbq/': typeof ReservationsBbqIndexRoute
+  '/reservations/hall/': typeof ReservationsHallIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/deliveries': typeof DeliveriesRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
-  '/news': typeof NewsRouteWithChildren
-  '/payments': typeof PaymentsRouteWithChildren
-  '/profile': typeof ProfileRouteWithChildren
-  '/reservations': typeof ReservationsRouteWithChildren
-  '/service-requests': typeof ServiceRequestsRouteWithChildren
-  '/visitors': typeof VisitorsRouteWithChildren
   '/news/$id': typeof NewsIdRoute
   '/payments/$id': typeof PaymentsIdRoute
   '/profile/edit': typeof ProfileEditRoute
-  '/reservations/bbq': typeof ReservationsBbqRouteWithChildren
-  '/reservations/hall': typeof ReservationsHallRouteWithChildren
   '/service-requests/$id': typeof ServiceRequestsIdRoute
   '/service-requests/new': typeof ServiceRequestsNewRoute
   '/visitors/$id': typeof VisitorsIdRoute
   '/visitors/new': typeof VisitorsNewRoute
+  '/news': typeof NewsIndexRoute
+  '/payments': typeof PaymentsIndexRoute
+  '/profile': typeof ProfileIndexRoute
+  '/reservations': typeof ReservationsIndexRoute
+  '/service-requests': typeof ServiceRequestsIndexRoute
+  '/visitors': typeof VisitorsIndexRoute
   '/reservations/bbq/new': typeof ReservationsBbqNewRoute
   '/reservations/hall/new': typeof ReservationsHallNewRoute
+  '/reservations/bbq': typeof ReservationsBbqIndexRoute
+  '/reservations/hall': typeof ReservationsHallIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -204,8 +260,16 @@ export interface FileRoutesById {
   '/service-requests/new': typeof ServiceRequestsNewRoute
   '/visitors/$id': typeof VisitorsIdRoute
   '/visitors/new': typeof VisitorsNewRoute
+  '/news/': typeof NewsIndexRoute
+  '/payments/': typeof PaymentsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/reservations/': typeof ReservationsIndexRoute
+  '/service-requests/': typeof ServiceRequestsIndexRoute
+  '/visitors/': typeof VisitorsIndexRoute
   '/reservations/bbq/new': typeof ReservationsBbqNewRoute
   '/reservations/hall/new': typeof ReservationsHallNewRoute
+  '/reservations/bbq/': typeof ReservationsBbqIndexRoute
+  '/reservations/hall/': typeof ReservationsHallIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -229,31 +293,39 @@ export interface FileRouteTypes {
     | '/service-requests/new'
     | '/visitors/$id'
     | '/visitors/new'
+    | '/news/'
+    | '/payments/'
+    | '/profile/'
+    | '/reservations/'
+    | '/service-requests/'
+    | '/visitors/'
     | '/reservations/bbq/new'
     | '/reservations/hall/new'
+    | '/reservations/bbq/'
+    | '/reservations/hall/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/deliveries'
     | '/home'
     | '/login'
+    | '/news/$id'
+    | '/payments/$id'
+    | '/profile/edit'
+    | '/service-requests/$id'
+    | '/service-requests/new'
+    | '/visitors/$id'
+    | '/visitors/new'
     | '/news'
     | '/payments'
     | '/profile'
     | '/reservations'
     | '/service-requests'
     | '/visitors'
-    | '/news/$id'
-    | '/payments/$id'
-    | '/profile/edit'
-    | '/reservations/bbq'
-    | '/reservations/hall'
-    | '/service-requests/$id'
-    | '/service-requests/new'
-    | '/visitors/$id'
-    | '/visitors/new'
     | '/reservations/bbq/new'
     | '/reservations/hall/new'
+    | '/reservations/bbq'
+    | '/reservations/hall'
   id:
     | '__root__'
     | '/'
@@ -275,8 +347,16 @@ export interface FileRouteTypes {
     | '/service-requests/new'
     | '/visitors/$id'
     | '/visitors/new'
+    | '/news/'
+    | '/payments/'
+    | '/profile/'
+    | '/reservations/'
+    | '/service-requests/'
+    | '/visitors/'
     | '/reservations/bbq/new'
     | '/reservations/hall/new'
+    | '/reservations/bbq/'
+    | '/reservations/hall/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -364,6 +444,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/visitors/': {
+      id: '/visitors/'
+      path: '/'
+      fullPath: '/visitors/'
+      preLoaderRoute: typeof VisitorsIndexRouteImport
+      parentRoute: typeof VisitorsRoute
+    }
+    '/service-requests/': {
+      id: '/service-requests/'
+      path: '/'
+      fullPath: '/service-requests/'
+      preLoaderRoute: typeof ServiceRequestsIndexRouteImport
+      parentRoute: typeof ServiceRequestsRoute
+    }
+    '/reservations/': {
+      id: '/reservations/'
+      path: '/'
+      fullPath: '/reservations/'
+      preLoaderRoute: typeof ReservationsIndexRouteImport
+      parentRoute: typeof ReservationsRoute
+    }
+    '/profile/': {
+      id: '/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/payments/': {
+      id: '/payments/'
+      path: '/'
+      fullPath: '/payments/'
+      preLoaderRoute: typeof PaymentsIndexRouteImport
+      parentRoute: typeof PaymentsRoute
+    }
+    '/news/': {
+      id: '/news/'
+      path: '/'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof NewsRoute
+    }
     '/visitors/new': {
       id: '/visitors/new'
       path: '/new'
@@ -427,6 +549,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsIdRouteImport
       parentRoute: typeof NewsRoute
     }
+    '/reservations/hall/': {
+      id: '/reservations/hall/'
+      path: '/'
+      fullPath: '/reservations/hall/'
+      preLoaderRoute: typeof ReservationsHallIndexRouteImport
+      parentRoute: typeof ReservationsHallRoute
+    }
+    '/reservations/bbq/': {
+      id: '/reservations/bbq/'
+      path: '/'
+      fullPath: '/reservations/bbq/'
+      preLoaderRoute: typeof ReservationsBbqIndexRouteImport
+      parentRoute: typeof ReservationsBbqRoute
+    }
     '/reservations/hall/new': {
       id: '/reservations/hall/new'
       path: '/new'
@@ -446,20 +582,24 @@ declare module '@tanstack/react-router' {
 
 interface NewsRouteChildren {
   NewsIdRoute: typeof NewsIdRoute
+  NewsIndexRoute: typeof NewsIndexRoute
 }
 
 const NewsRouteChildren: NewsRouteChildren = {
   NewsIdRoute: NewsIdRoute,
+  NewsIndexRoute: NewsIndexRoute,
 }
 
 const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
 
 interface PaymentsRouteChildren {
   PaymentsIdRoute: typeof PaymentsIdRoute
+  PaymentsIndexRoute: typeof PaymentsIndexRoute
 }
 
 const PaymentsRouteChildren: PaymentsRouteChildren = {
   PaymentsIdRoute: PaymentsIdRoute,
+  PaymentsIndexRoute: PaymentsIndexRoute,
 }
 
 const PaymentsRouteWithChildren = PaymentsRoute._addFileChildren(
@@ -468,10 +608,12 @@ const PaymentsRouteWithChildren = PaymentsRoute._addFileChildren(
 
 interface ProfileRouteChildren {
   ProfileEditRoute: typeof ProfileEditRoute
+  ProfileIndexRoute: typeof ProfileIndexRoute
 }
 
 const ProfileRouteChildren: ProfileRouteChildren = {
   ProfileEditRoute: ProfileEditRoute,
+  ProfileIndexRoute: ProfileIndexRoute,
 }
 
 const ProfileRouteWithChildren =
@@ -479,10 +621,12 @@ const ProfileRouteWithChildren =
 
 interface ReservationsBbqRouteChildren {
   ReservationsBbqNewRoute: typeof ReservationsBbqNewRoute
+  ReservationsBbqIndexRoute: typeof ReservationsBbqIndexRoute
 }
 
 const ReservationsBbqRouteChildren: ReservationsBbqRouteChildren = {
   ReservationsBbqNewRoute: ReservationsBbqNewRoute,
+  ReservationsBbqIndexRoute: ReservationsBbqIndexRoute,
 }
 
 const ReservationsBbqRouteWithChildren = ReservationsBbqRoute._addFileChildren(
@@ -491,10 +635,12 @@ const ReservationsBbqRouteWithChildren = ReservationsBbqRoute._addFileChildren(
 
 interface ReservationsHallRouteChildren {
   ReservationsHallNewRoute: typeof ReservationsHallNewRoute
+  ReservationsHallIndexRoute: typeof ReservationsHallIndexRoute
 }
 
 const ReservationsHallRouteChildren: ReservationsHallRouteChildren = {
   ReservationsHallNewRoute: ReservationsHallNewRoute,
+  ReservationsHallIndexRoute: ReservationsHallIndexRoute,
 }
 
 const ReservationsHallRouteWithChildren =
@@ -503,11 +649,13 @@ const ReservationsHallRouteWithChildren =
 interface ReservationsRouteChildren {
   ReservationsBbqRoute: typeof ReservationsBbqRouteWithChildren
   ReservationsHallRoute: typeof ReservationsHallRouteWithChildren
+  ReservationsIndexRoute: typeof ReservationsIndexRoute
 }
 
 const ReservationsRouteChildren: ReservationsRouteChildren = {
   ReservationsBbqRoute: ReservationsBbqRouteWithChildren,
   ReservationsHallRoute: ReservationsHallRouteWithChildren,
+  ReservationsIndexRoute: ReservationsIndexRoute,
 }
 
 const ReservationsRouteWithChildren = ReservationsRoute._addFileChildren(
@@ -517,11 +665,13 @@ const ReservationsRouteWithChildren = ReservationsRoute._addFileChildren(
 interface ServiceRequestsRouteChildren {
   ServiceRequestsIdRoute: typeof ServiceRequestsIdRoute
   ServiceRequestsNewRoute: typeof ServiceRequestsNewRoute
+  ServiceRequestsIndexRoute: typeof ServiceRequestsIndexRoute
 }
 
 const ServiceRequestsRouteChildren: ServiceRequestsRouteChildren = {
   ServiceRequestsIdRoute: ServiceRequestsIdRoute,
   ServiceRequestsNewRoute: ServiceRequestsNewRoute,
+  ServiceRequestsIndexRoute: ServiceRequestsIndexRoute,
 }
 
 const ServiceRequestsRouteWithChildren = ServiceRequestsRoute._addFileChildren(
@@ -531,11 +681,13 @@ const ServiceRequestsRouteWithChildren = ServiceRequestsRoute._addFileChildren(
 interface VisitorsRouteChildren {
   VisitorsIdRoute: typeof VisitorsIdRoute
   VisitorsNewRoute: typeof VisitorsNewRoute
+  VisitorsIndexRoute: typeof VisitorsIndexRoute
 }
 
 const VisitorsRouteChildren: VisitorsRouteChildren = {
   VisitorsIdRoute: VisitorsIdRoute,
   VisitorsNewRoute: VisitorsNewRoute,
+  VisitorsIndexRoute: VisitorsIndexRoute,
 }
 
 const VisitorsRouteWithChildren = VisitorsRoute._addFileChildren(

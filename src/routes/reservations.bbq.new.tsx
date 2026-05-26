@@ -2,15 +2,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
-import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
 import { createBbqReservation, createHallReservation, bbqKeys, hallKeys } from "@/lib/api/queries";
 
 export const Route = createFileRoute("/reservations/bbq/new")({
-  component: () => (
-    <ProtectedRoute>
-      <ReservationForm space="Churrasqueira" backTo="/reservations/bbq" kind="bbq" />
-    </ProtectedRoute>
-  ),
+  component: () => <ReservationForm space="Churrasqueira" backTo="/reservations/bbq" kind="bbq" />,
 });
 
 export function ReservationForm({

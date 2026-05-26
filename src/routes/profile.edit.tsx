@@ -2,16 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { AppShell, LoadingState } from "@/components/AppShell";
-import { ProtectedRoute } from "@/lib/auth/ProtectedRoute";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { updateCurrentUser } from "@/lib/api/auth";
 
 export const Route = createFileRoute("/profile/edit")({
-  component: () => (
-    <ProtectedRoute>
-      <EditProfile />
-    </ProtectedRoute>
-  ),
+  component: EditProfile,
 });
 
 function EditProfile() {

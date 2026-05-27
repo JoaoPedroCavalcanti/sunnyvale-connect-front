@@ -30,10 +30,9 @@ const spaces = [
 
 function ReservationsPage() {
   return (
-    <AppShell showTabs>
-      <div className="px-5 pt-8 pb-4">
-        <h1 className="text-2xl font-bold">Reservas</h1>
-        <p className="text-sm text-muted-foreground mt-1">Reserve os espaços do condomínio.</p>
+    <AppShell title="Reservas" showBack backTo="/home" showTabs>
+      <div className="px-5 pt-6 pb-4">
+        <p className="text-sm text-muted-foreground">Reserve os espaços do condomínio.</p>
       </div>
       <div className="px-5 space-y-3">
         {spaces.map((s) => (

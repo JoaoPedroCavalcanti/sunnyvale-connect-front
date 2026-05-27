@@ -19,13 +19,13 @@ function PaymentDetail() {
   const { id } = Route.useParams();
   const { data: p, isPending, isError, refetch } = useQuery(paymentOne(id));
 
-  if (isPending) return <AppShell title="Pagamento" showBack showTabs={false}><LoadingState /></AppShell>;
-  if (isError) return <AppShell title="Pagamento" showBack showTabs={false}><ErrorState onRetry={() => refetch()} /></AppShell>;
+  if (isPending) return <AppShell title="Pagamento" showBack backTo="/payments" showTabs={false}><LoadingState /></AppShell>;
+  if (isError) return <AppShell title="Pagamento" showBack backTo="/payments" showTabs={false}><ErrorState onRetry={() => refetch()} /></AppShell>;
 
   const pp = p as CondoPayment & { amount?: number | string; due_date?: string | null };
 
   return (
-    <AppShell title="Pagamento" showBack showTabs={false}>
+    <AppShell title="Pagamento" showBack backTo="/payments" showTabs={false}>
       <div className="p-5 space-y-3">
         <Card>
           <StatusBadge status={statusLabel[p.status] ?? p.status} />

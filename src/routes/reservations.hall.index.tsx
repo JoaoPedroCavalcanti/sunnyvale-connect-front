@@ -13,7 +13,7 @@ function HallList() {
   const { data, isPending, isError, refetch } = useQuery(hallList());
 
   return (
-    <AppShell title="Salão de festas" showBack showTabs={false}
+    <AppShell title="Salão de festas" showBack backTo="/reservations" showTabs={false}
       rightSlot={
         <Link to="/reservations/hall/new" className="p-2 rounded-full bg-primary text-primary-foreground" aria-label="Nova reserva">
           <Plus className="size-4" />

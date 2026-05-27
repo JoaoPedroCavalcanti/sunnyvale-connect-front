@@ -12,7 +12,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  if (!user) return <AppShell showTabs><LoadingState /></AppShell>;
+  if (!user) return <AppShell title="Perfil" showBack backTo="/home" showTabs><LoadingState /></AppShell>;
 
   function handleLogout() {
     logout();
@@ -20,8 +20,8 @@ function ProfilePage() {
   }
 
   return (
-    <AppShell showTabs>
-      <div className="bg-gradient-to-b from-primary to-primary/80 text-primary-foreground pt-12 pb-10 px-5 rounded-b-3xl flex flex-col items-center">
+    <AppShell title="Perfil" showBack backTo="/home" showTabs>
+      <div className="bg-gradient-to-b from-primary to-primary/80 text-primary-foreground pt-6 pb-10 px-5 rounded-b-3xl flex flex-col items-center">
         <div className="size-20 rounded-full bg-primary-foreground/20 backdrop-blur flex items-center justify-center text-3xl font-bold">
           {user.first_name.charAt(0)}{user.last_name.charAt(0)}
         </div>

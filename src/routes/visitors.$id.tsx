@@ -23,11 +23,11 @@ function VisitorDetail() {
     },
   });
 
-  if (isPending) return <AppShell title="Visitante" showBack showTabs={false}><LoadingState /></AppShell>;
-  if (isError) return <AppShell title="Visitante" showBack showTabs={false}><ErrorState onRetry={() => refetch()} /></AppShell>;
+  if (isPending) return <AppShell title="Visitante" showBack backTo="/visitors" showTabs={false}><LoadingState /></AppShell>;
+  if (isError) return <AppShell title="Visitante" showBack backTo="/visitors" showTabs={false}><ErrorState onRetry={() => refetch()} /></AppShell>;
 
   return (
-    <AppShell title="Visitante" showBack showTabs={false}>
+    <AppShell title="Visitante" showBack backTo="/visitors" showTabs={false}>
       <div className="p-5 space-y-3">
         <Card>
           <div className="flex items-center gap-3">

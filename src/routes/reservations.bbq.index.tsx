@@ -13,7 +13,7 @@ function BbqList() {
   const { data, isPending, isError, refetch } = useQuery(bbqList());
 
   return (
-    <AppShell title="Churrasqueira" showBack showTabs={false}
+    <AppShell title="Churrasqueira" showBack backTo="/reservations" showTabs={false}
       rightSlot={
         <Link to="/reservations/bbq/new" className="p-2 rounded-full bg-primary text-primary-foreground" aria-label="Nova reserva">
           <Plus className="size-4" />

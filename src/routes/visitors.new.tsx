@@ -36,7 +36,7 @@ function NewVisitor() {
   }
 
   return (
-    <AppShell title="Novo visitante" showBack showTabs={false}>
+    <AppShell title="Novo visitante" showBack backTo="/visitors" showTabs={false}>
       <form onSubmit={submit} className="p-5 space-y-4">
         <Field label="Nome do visitante">
           <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}

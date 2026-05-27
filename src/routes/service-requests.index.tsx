@@ -20,7 +20,7 @@ function RequestsPage() {
   const { data, isPending, isError, refetch } = useQuery(requestsList());
 
   return (
-    <AppShell title="Solicitações" showBack showTabs={false}
+    <AppShell title="Solicitações" showBack backTo="/home" showTabs={false}
       rightSlot={
         <Link to="/service-requests/new" className="p-2 rounded-full bg-primary text-primary-foreground" aria-label="Nova">
           <Plus className="size-4" />

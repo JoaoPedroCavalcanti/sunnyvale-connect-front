@@ -14,7 +14,7 @@ function EditProfile() {
   const { user } = useAuth();
   // The form bootstraps from the current user; if the user object is still
   // loading we hold off rendering to avoid uncontrolled-input warnings.
-  if (!user) return <AppShell title="Editar perfil" showBack showTabs={false}><LoadingState /></AppShell>;
+  if (!user) return <AppShell title="Editar perfil" showBack backTo="/profile" showTabs={false}><LoadingState /></AppShell>;
 
   return <EditForm initial={user} onDone={() => navigate({ to: "/profile" })} />;
 }
@@ -42,7 +42,7 @@ function EditForm({
   }
 
   return (
-    <AppShell title="Editar perfil" showBack showTabs={false}>
+    <AppShell title="Editar perfil" showBack backTo="/profile" showTabs={false}>
       <form onSubmit={submit} className="p-5 space-y-4">
         <Field label="Nome"><input required value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} className="input" /></Field>
         <Field label="Sobrenome"><input required value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} className="input" /></Field>

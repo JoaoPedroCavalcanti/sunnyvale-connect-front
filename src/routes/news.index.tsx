@@ -14,7 +14,7 @@ function NewsPage() {
   const { data, isPending, isError, refetch } = useQuery(newsList());
 
   return (
-    <AppShell title="Comunicados" showBack showTabs={false}>
+    <AppShell title="Comunicados" showBack backTo="/home" showTabs={false}>
       <div className="p-5 space-y-3">
         {isPending ? (
           <LoadingState label="Carregando comunicados..." />

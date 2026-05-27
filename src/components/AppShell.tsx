@@ -6,6 +6,12 @@ interface AppShellProps {
   children: ReactNode;
   title?: string;
   showBack?: boolean;
+  /**
+   * Where the back button should navigate. When omitted, falls back to the
+   * browser history. Use this on tab-roots and form screens to make the
+   * back action deterministic regardless of how the user got there.
+   */
+  backTo?: string;
   showTabs?: boolean;
   rightSlot?: ReactNode;
 }
@@ -18,7 +24,7 @@ const tabs = [
   { to: "/profile", label: "Perfil", icon: User },
 ] as const;
 
-export function AppShell({ children, title, showBack, showTabs = true, rightSlot }: AppShellProps) {
+export function AppShell({ children, title, showBack, backTo, showTabs = true, rightSlot }: AppShellProps) {
   const router = useRouter();
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -26,13 +32,23 @@ export function AppShell({ children, title, showBack, showTabs = true, rightSlot
         <header className="sticky top-0 z-20 bg-card/95 backdrop-blur border-b border-border">
           <div className="flex items-center gap-2 px-4 h-14">
             {showBack && (
-              <button
-                onClick={() => router.history.back()}
-                className="-ml-2 p-2 rounded-full hover:bg-muted text-foreground"
-                aria-label="Voltar"
-              >
-                <ArrowLeft className="size-5" />
-              </button>
+              backTo ? (
+                <Link
+                  to={backTo}
+                  className="-ml-2 p-2 rounded-full hover:bg-muted text-foreground"
+                  aria-label="Voltar"
+                >
+                  <ArrowLeft className="size-5" />
+                </Link>
+              ) : (
+                <button
+                  onClick={() => router.history.back()}
+                  className="-ml-2 p-2 rounded-full hover:bg-muted text-foreground"
+                  aria-label="Voltar"
+                >
+                  <ArrowLeft className="size-5" />
+                </button>
+              )
             )}
             <h1 className="text-base font-semibold flex-1 truncate">{title}</h1>
             {rightSlot}

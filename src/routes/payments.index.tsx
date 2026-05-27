@@ -20,8 +20,8 @@ const statusLabel: Record<string, string> = {
 function PaymentsPage() {
   const { data, isPending, isError, refetch } = useQuery(paymentsList());
 
-  if (isPending) return <AppShell showTabs><LoadingState /></AppShell>;
-  if (isError) return <AppShell showTabs><ErrorState onRetry={() => refetch()} /></AppShell>;
+  if (isPending) return <AppShell title="Financeiro" showBack backTo="/home" showTabs><LoadingState /></AppShell>;
+  if (isError) return <AppShell title="Financeiro" showBack backTo="/home" showTabs><ErrorState onRetry={() => refetch()} /></AppShell>;
 
   const groups = [
     { key: "overdue", title: "Atrasados", items: data.filter((p) => p.status === "overdue") },
@@ -34,9 +34,8 @@ function PaymentsPage() {
     .reduce((s, p) => s + Number((p as CondoPayment & { amount?: number | string }).amount ?? 0), 0);
 
   return (
-    <AppShell showTabs>
-      <div className="bg-gradient-to-b from-primary to-primary/80 text-primary-foreground pt-10 pb-8 px-5 rounded-b-3xl">
-        <p className="text-sm opacity-80">Financeiro</p>
+    <AppShell title="Financeiro" showBack backTo="/home" showTabs>
+      <div className="bg-gradient-to-b from-primary to-primary/80 text-primary-foreground pt-6 pb-8 px-5 rounded-b-3xl">
         <h1 className="text-2xl font-bold">Total em aberto</h1>
         <p className="text-3xl font-bold mt-2">{formatCurrency(total)}</p>
       </div>

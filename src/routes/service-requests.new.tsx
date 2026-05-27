@@ -52,7 +52,7 @@ function NewRequest() {
   }
 
   return (
-    <AppShell title="Nova solicitação" showBack showTabs={false}>
+    <AppShell title="Nova solicitação" showBack backTo="/service-requests" showTabs={false}>
       <form onSubmit={submit} className="p-5 space-y-4">
         <Field label="Título">
           <input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input" placeholder="Resumo do problema" />

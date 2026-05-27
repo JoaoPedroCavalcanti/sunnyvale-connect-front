@@ -29,11 +29,11 @@ function RequestDetail() {
     },
   });
 
-  if (isPending) return <AppShell title="Chamado" showBack showTabs={false}><LoadingState /></AppShell>;
-  if (isError) return <AppShell title="Chamado" showBack showTabs={false}><ErrorState onRetry={() => refetch()} /></AppShell>;
+  if (isPending) return <AppShell title="Chamado" showBack backTo="/service-requests" showTabs={false}><LoadingState /></AppShell>;
+  if (isError) return <AppShell title="Chamado" showBack backTo="/service-requests" showTabs={false}><ErrorState onRetry={() => refetch()} /></AppShell>;
 
   return (
-    <AppShell title="Chamado" showBack showTabs={false}>
+    <AppShell title="Chamado" showBack backTo="/service-requests" showTabs={false}>
       <div className="p-5 space-y-3">
         <Card>
           <div className="flex items-center justify-between mb-2">

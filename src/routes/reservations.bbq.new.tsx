@@ -40,7 +40,7 @@ export function ReservationForm({
   }
 
   return (
-    <AppShell title={`Reservar ${space.toLowerCase()}`} showBack showTabs={false}>
+    <AppShell title={`Reservar ${space.toLowerCase()}`} showBack backTo={backTo} showTabs={false}>
       <form onSubmit={submit} className="p-5 space-y-4">
         <Field label="Data da reserva">
           <input type="date" required value={date} onChange={(e) => setDate(e.target.value)}

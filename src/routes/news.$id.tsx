@@ -13,7 +13,7 @@ function NewsDetail() {
   const { data: item, isPending, isError, refetch } = useQuery(newsOne(Number(id)));
 
   return (
-    <AppShell title="Comunicado" showBack showTabs={false}>
+    <AppShell title="Comunicado" showBack backTo="/news" showTabs={false}>
       <div className="p-5">
         {isPending ? (
           <LoadingState />

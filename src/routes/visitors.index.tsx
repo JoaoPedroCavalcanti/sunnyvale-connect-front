@@ -14,17 +14,17 @@ function VisitorsPage() {
   const { data, isPending, isError, refetch } = useQuery(visitorsList());
 
   return (
-    <AppShell showTabs>
-      <div className="px-5 pt-8 pb-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Visitantes</h1>
-          <p className="text-sm text-muted-foreground mt-1">Autorize entradas com facilidade.</p>
-        </div>
-        <Link to="/visitors/new" className="size-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md shadow-primary/30" aria-label="Novo visitante">
-          <Plus className="size-5" />
+    <AppShell title="Visitantes" showBack backTo="/home" showTabs
+      rightSlot={
+        <Link to="/visitors/new" className="p-2 rounded-full bg-primary text-primary-foreground" aria-label="Novo visitante">
+          <Plus className="size-4" />
         </Link>
+      }
+    >
+      <div className="px-5 pt-4 pb-2">
+        <p className="text-sm text-muted-foreground">Autorize entradas com facilidade.</p>
       </div>
-      <div className="px-5 space-y-3">
+      <div className="px-5 pt-2 space-y-3">
         {isPending ? (
           <LoadingState />
         ) : isError ? (
